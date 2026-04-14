@@ -1,0 +1,60 @@
+\documentclass[bachelor,lith,english]{liuthesis}
+%% Settings go in settings.tex
+\include{settings}
+\usepackage{rotating}
+\usepackage{color}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{xcolor}
+\usepackage{float}
+\pgfplotsset{compat=1.18}
+\usepackage{fontspec}
+\usepackage{subcaption}
+\usepackage[normalem]{ulem}
+%\newcommand{\revrev}[2]{\textcolor{red}{#2}}
+\newcommand{\revrev}[2]{\sout{#1}\textcolor{red}{#2}}
+%\newcommand{\revrev}[2]{#2}
+
+
+
+% \usepackage{changebar}
+
+\department{Institutionen för datavetenskap}
+\departmentenglish{Department of Computer and Information Science}
+\departmentshort{IDA}
+% If this is a thesis at the cognitive science study programme, use
+% the "area" command to generate a proper (?) ISRN
+% \area{KOGVET-A}
+
+% Include an external supervisor on the cover page
+% \externalsupervisor{Min företagshandledare}
+\supervisor{Niklas Carlsson}
+\examiner{Marcus Bendtsen}
+\titleenglish{Comparing Anomaly Detection Techniques on Offline and Online Log Data}
+
+\titleswedish{Jämförelse av anomaly detection tekniker på offline och online log data}
+\thesissubject{Säkra system}
+
+\publicationyear{2025}
+\currentyearthesisnumber{14}
+\dateofpublication{??}
+
+\author{\parbox{\textwidth}{Carl Arthur\\
+Carl Thulin}}
+
+% Two authors
+% \author{\parbox{\textwidth}{Ola Leifler\\
+%   Alexander Sanner}}
+
+\begin{document}
+
+\chapterstyle{VZ43}
+
+\include{intro-cs}
+\include{background}
+\include{method}
+\include{evaluation}
+\include{discussion-cs}
+\include{conclusion}
+\printbibliography
+\end{document}

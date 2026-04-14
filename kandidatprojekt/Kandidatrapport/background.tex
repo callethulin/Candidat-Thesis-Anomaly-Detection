@@ -1,0 +1,156 @@
+
+\chapter{Background}
+\label{cha:background}
+
+\section{Log data}
+\label{logdata}
+Log datasets consist of several log rows that include automatically generated text about events relevant to a particular system \cite{techtargetlogfile}. In principle, all software applications and systems produce log files. The files contain historical details about the operations, activities, and usage patterns of the system. It provides valuable insights for users, system administrators, or hardware developers, to evaluate the health of the system and determine if it is functioning correctly.
+
+The log files have several different data points included in them such as processes, events and timestamps \cite{techtargetlogfile}. They are also divided into different categories such as system logs, application logs, event logs, and error logs. In this paper, we use system logs and generally recorded events and activities related to the operating system. These logs include details on system modifications, unplanned shutdowns and related messages, hardware malfunctions, errors, resource usage, and various warnings. 
+
+\section{Datasets}
+\label{Datasets}
+For our research, we utilize Loghub's collection of system logs, which include production data from previous studies as well as logs collected from real systems in a lab environment created for research purposes \cite{zhu2023loghublargecollectionlog}.
+
+\subsection{HDFS-v1}
+Hadoop Distributed File System (HDFS) is a distributed system designed to store and manage large-scale data across multiple machines in a fault-tolerant and scalable manner. We will use HDFS-v1 from loghub in our research \cite{zhu2023loghublargecollectionlog}. The logs are sliced into log sequences according to block IDs throughout the work of collecting the data \cite{Wei2010consolelogs}. As shown in Table \ref{tab:dataset}, the HDFS-v1 dataset was collected over a period of $38.7$ hours, contains $11,175,629$ lines, has a total size of $1.47$ GB, and includes manually labeled data through hand-crafted rules to identify anomalies \cite{zhu2023loghublargecollectionlog}. The \revrev{data set}{dataset} will be referred to as HDFS in this paper. 
+
+\subsection{BGL}
+BGL is a log dataset from a Bluegene/L supercomputer system at Lawrence Livermore National Labs in Livermore, California. The supercomputer system has $131,072$ processors and $32,768$ GB memory  \cite{zhu2023loghublargecollectionlog}. The logs contain alert and non-alert messages, identified by alert category tags, seen as labels. "-" indicates non-alert messages and any other entry represents an alert message. As shown in table \ref{tab:dataset}, the BGL dataset was collected over a long period of time ($214.7$ days), contains $4,631,261$ lines, has a total size of $719.4$ MB and includes labeled data. 
+
+\begin{table}[t]
+    \centering
+    \fontspec{Roboto}
+    \begin{tabular}{l l c l r r}
+        \toprule
+        \textbf{Dataset} & \textbf{Description} & \textbf{Labeled} & \textbf{Time Span} & \textbf{\#Lines} & \textbf{Raw Size} \\
+        \midrule
+        HDFS-v1 & Distributed system & \checkmark & $38.7$ hours & $11,175,629$  & $1.47$ GB  \\
+        BGL & Supercomputer system & \checkmark & $214.7$ days   & $4,631,261$ & $719.4$ MB \\
+        \bottomrule
+    \end{tabular}
+    \caption[Dataset details]{Dataset details \cite{zhu2023loghublargecollectionlog}.}
+    \label{tab:dataset}
+\end{table}
+
+\section{Machine learning}
+\label{ML}
+In machine learning, statistical learning and optimization methods are used to enable computers to analyze historical data and detect patterns for further assumptions \cite{ucBerkeleyML}. A common assumption in machine learning is that humans train computers to autonomously perform tasks that go beyond basic calculations by learning from their environment through repeated exposure to examples \cite{ElNaqa2015}. Machine learning-based anomaly detection techniques typically operate in three main modes and they are supervised, unsupervised, and semi-supervised learning. The three different modes are figuratively explained in Figure \ref{fig:machine-learning}.
+
+\subsubsection{Supervised learning}
+Anomaly detection techniques used in supervised mode require a labeled training set with both anomalous and normal instances \cite{Varun2009Anomaly}. The goal is to create a model capable of predicting whether new data is anomalous or normal. Supervised anomaly detection faces two main challenges, anomalies are much rarer than normal instances in the training data, and accurately labeling data, especially anomalies, is difficult. To address this, some methods introduce artificial anomalies into a normal dataset to create a labeled training set. 
+
+The goal for supervised learning in anomaly detection is to develop a model that maps inputs to outputs, where categorical outputs define a classification task and numerical outputs define a regression task \cite{8406613}. Some examples of tasks for supervised learning is recognition of objects in images \cite{article}, machine translation \cite{10.5555/2969033.2969173}, and filtering spams \cite{788645}.
+
+\subsubsection{Unsupervised learning}
+In unsupervised learning, the algorithm is given only input data without any labels, allowing it to train only on an unlabeled dataset \cite{ElNaqa2015}. Unsupervised learning involves solving various problems, such as clustering data points based on a similarity measure \cite{10.1145/331499.331504}, reduce the number of variables and data features with dimensionality reduction \cite{alex2012universityoftoronto}, and model pre-training \cite{10.5555/1756006.1756025}. Clustering is an example that are used for anomaly detection \cite{Varun2009Anomaly}.
+
+\subsubsection{Semi-supervised learning}
+Semi-supervised anomaly detection techniques combine elements of both supervised and unsupervised learning methods \cite{ElNaqa2015}. In these techniques, part of the training dataset is labeled while the rest remains unlabeled. As shown in Figure \ref{fig:machine-learning}, semi-supervised learning methods use partially labeled data during training. The more labeled data you require in the training set, the greater the need for human-machine interaction. 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/learningmethods.pdf}
+    \caption[The different modes of machine learning]{The different modes of machine learning. Created in BioRender \cite{biorendermodesofmachinelearning}}.
+    \label{fig:machine-learning}
+\end{figure}
+
+\section{Anomaly detection}
+\label{AD}
+Anomaly detection is about finding patterns in data that is not in line with the expected behavior, these abnormal patterns are referred to as anomalies or outliers \cite{Varun2009Anomaly}. Anomalies are patterns in data that does not comply with the defined normal behavior, illustrated in Figure \ref{fig:anomalies} where $O_1$, $O_2$ and $O_3$ are anomalies, being far away from the normal regions $N_1$ and $N_2$ (considered normal as most observations lie there). The usage field of anomaly detection is wide, spanning from fraud detection in credit cards to military surveillance. Within this span lies intrusion detection for cybersecurity, which is the usage area of this project.
+
+Defining what is normal and abnormal data is not an easy task, nor is it easy to define an anomaly. Varun et al. \cite{Varun2009Anomaly} classifies anomalies into following three categories.
+
+\subsubsection{Point Anomalies} If a single data instance stands out as anomalous compared to the rest of the dataset, it is referred to as a point anomaly. This is the most basic type of anomaly, and the easiest to detect as it deviates from the rest of the data.
+
+\subsubsection{Contextual Anomalies} A data instance is considered a contextual anomaly if it is anomalous within a specific context but does not have to appear as an anomaly in other circumstances.
+
+\subsubsection{Collective Anomalies} When a group of related data instances deviates from the the overall dataset, that group is considered a collective anomaly. However, this does not necessarily mean that all instances are anomalies on their own, but their combined occurrence forms an anomaly. 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\linewidth]{figures/anomalies.pdf}
+    \caption[Simplified example of anomalies]{Simplified example of anomalies. Created in BioRender \cite{biorenderanomalies}.}
+    \label{fig:anomalies}
+\end{figure}
+
+
+\subsection{Offline anomaly detection methods} 
+An offline anomaly detection technique refers to the process of analyzing previously collected data, not in real time, to identify anomalies. This approach processes the entire dataset at once, instead of continuously monitoring incoming data, and is typically used for analyzing historical data or if real-time detection is not required.
+
+\subsubsection{Isolation Forest}
+Isolation Forest (IF) is an unsupervised machine learning method used for anomaly detection. It is a decision-tree-based algorithm using isolation trees \cite{CortesIF}. It's functionality is based on randomly splitting data along feature values, and isolating rare observations in fewer splits. Since anomalies differ from the majority of data, they should be easier to detect. Isolation trees recursively separates data until each point is isolated, while common points require more separations, anomalies require few and are quickly isolated \cite{Fei2008IsolationForest}. The depth of the tree then gives a measure of how anonymous the point is, a higher depth gives less indication of anomaly, while lower depth indicates anomaly. To put this in perspective, using 1000 trees, anomalies has an average path (number of edges traversed) of $4.02$ and normal points has an average path of 12.82 \cite{Fei2008IsolationForest}. Using IF in anomaly detection is a two stage process, firstly there is a training stage, then a evaluating stage. 
+
+In the \textbf{training stage} isolation trees are built recursively dividing the training data until all instances are isolated, or a certain tree height is reached (resulting in an incomplete model). The tree height \( \ell \) is determined based on the sub-sampling size \( \psi \) using the formula 
+\begin{equation*}
+l = \lceil \log_2(\psi) \rceil
+\end{equation*} 
+and indicates the average height. Since no \revrev{anomaly's}{anomalies} should reach a height higher than average, only data points with shorter than average path are of interest. 
+
+IF has two input parameters, sub-sampling size \( \psi \) and number of trees \textit{t}. The sub-sampling size \( \psi \) controls the training data size, however when it's increased to a desired value there is no need to increase further, as it leads to higher processing time and increased memory size. The recommended value is \( \psi = 256 \) \cite{Fei2008IsolationForest}. The number of trees \textit{t} controls the ensamble size. The default value is  \( \textit{t} = 100 \), higher value normally does not increase accuracy. 
+
+The \textbf{evaluating stage} derives an anomaly score \textit{s} based on an expected path length, calculations for this can be found in Fei Tony et al paper \cite{Fei2008IsolationForest}. The anomaly score \textit{s} holds a value $0 < s \leq 1$. If  \textit{s} is very close to 1, it's definitely an anomaly. If  \textit{s}  is much smaller than $0.5$, they are safe to be regarded as normal instances. Lastly, if all instances return $s\approx 0.5$ the whole set is considered not having any distinct anomaly. 
+
+\subsubsection{LogClustering}
+LogClustering is an unsupervised anomaly detection technique that groups logs into clusters, making it easier to identify log-based issues \cite{7883294}. It also leverages a knowledge base to determine whether specific log sequences have occurred before. There are two different phases of the LogClustering operations, construction phase and production phase. During the construction phase, the vectorized log sequences are clustered and a representative sequence from each cluster is stored in a knowledge base. In the production phase, logs are processed the same way, and new sequences are checked against the knowledge base. Finally, the knowledge base is updated with the new clusters. 
+
+Figure \ref{fig:LogClustering_image} illustrates the three main steps of the process \cite{7883294}. The first step is log clustering, where the similarity between log sequences is calculated using the agglomerative hierarchical clustering technique, allowing them to be grouped into clusters. In the second step, extracting representative log sequences, the centroid of each cluster is selected as its representative log sequence. Finally, in the checking recurrence step, each representative log sequence is examined to determine whether it has previously appeared in the knowledge base. 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Logclustering-2.pdf} 
+    \caption[Illustration of the key stages in the LogClustering algorithm]{Illustration of the key stages in the LogClustering algorithm. Created in BioRender \cite{biorenderlogclustering}.}
+    \label{fig:LogClustering_image}
+\end{figure}
+
+\subsubsection{PCA}
+
+Principal Component Analysis (PCA) is an unsupervised statistical machine learning technique widely used for anomaly detection and dimension reduction \cite{Shilin2017experiencereport}. That is, reduce the amount of variables but still preserve the valuable information. In fact, it is perhaps the best-known statistical method to achieve data separation for anomaly detection\cite{Kun2018On-LineAnomalydetection}. The core idea is to transition high dimensional data onto a new coordinate system defined by \textit{k} principal components, where \textit{k} is smaller than the original data's dimension. PCA calculates \textit{k} by  determining axes that account for the largest amount of variance in the data\cite{Shilin2017experiencereport}. 
+
+Once the principal components are found, they are ranked based on the contribution to the total variance, where lower-dimensional \textit{k} represent the core behavior and higher dimensional represent less relevant or noisy information. By doing so, the data is transformed into a lower-dimensional space, while still preserving essential characteristics. The new coordinate system can now be used in different ways, for instance in anomaly detection. To deviate normal data from anomalies, the principal components are split into two groups. Data that aligns with the lower-dimensional subspace is considered normal, while data associated with the higher-dimensional subspace is classified as anomalous \cite{Kun2018On-LineAnomalydetection}.
+
+\revrev{}{\subsubsection{Support Vector Machines}Support Vector Machines (SVM) is an supervised machine learning algorithm used for classification and regression tasks. It was originally designed to distinguish between two distinct data classes. When presented with such data, the algorithm identifies an optimal linear decision boundary known as a hyperplane that separates the classes while maximizing the margin between them. The margin refers to the largest possible distance the boundary can maintain from the closest data points on either side without misclassifying them. These closest data points, which the margin touches, are known as "support vectors" and are critical in defining the position and orientation of the hyperplane \cite{Mahadevan2009Fault}. 
+}
+
+\subsection{Online anomaly detection methods}
+ Online anomaly detection refers to the process of identifying unusual patterns or deviations in real-time data. Online detection must process incoming data dynamically, making decisions without access to the entire historical dataset or future logs. This creates needs for efficient algorithms that can handle streaming data, adapt to new patterns and detect anomalies. 
+
+\subsubsection{One-Class SVM}
+\revrev{Support Vector Machines (SVM) were initially designed to distinguish between two distinct data classes. When presented with such data, the algorithm identifies an optimal linear decision boundary known as a hyperplane that separates the classes while maximizing the margin between them. The margin refers to the largest possible distance the boundary can maintain from the closest data points on either side without misclassifying them. These closest data points, which the margin touches, are known as "support vectors" and are critical in defining the position and orientation of the hyperplane \cite{Mahadevan2009Fault}. }{}
+
+
+The One-Class SVM technique is a variant of the original support vector machine algorithm first proposed by Schölkopf et al. \cite{Schölkopf2001Estimating}, which is more specifically presented for outlier detection. The goal is to separate the outlier samples from normal samples. The One-Class SVM however only needs the normal data points while training, in contrast to SVM which needs both. One-Class SVM learns a boundary based on the majority of training data that represents normal system behavior. When a new test sample is evaluated, it is considered normal if it lies within this learned boundary, otherwise it is flagged as an anomaly. To handle more complex, non-linear patterns in the data, a kernel function is applied, which transforms the input data into a higher-dimensional space where a linear separation becomes possible \cite{Mahadevan2009Fault}. Figure \ref{fig:oneclassSVM_image} illustrates the basics of the One-Class SVM. Here, the green instances represents normal data points, red represents anomalies, and "d" represents the distance to the boundary, anything within the boundary is considered anomalous, and outside is considered normal. 
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/OneclassSVM.pdf} 
+    \caption[Graphical illustration of One-Class SVM]{Graphical illustration of One-Class SVM. Created in BioRender \cite{biorenderoneclasssvm}.}
+    \label{fig:oneclassSVM_image}
+\end{figure}
+
+
+\subsubsection{Half-Space Trees}
+\label{HST}
+Half-Space Trees (HST) are an online version of Isolation Forest (IF) \cite{riverWebsite}. The anomaly detection technique performs well for training on both normal data and data with anomalies, particularly effective for datasets with few anomalous data points \cite{SweeChuan2011FastAnomalyDetectionForStreamingData}. Unlike the IF method, which requires static data and does not update continuously \cite{Fei2008IsolationForest}, HST is an online anomaly detection technique that adapts to new data points without requiring model reconstruction~\cite{SweeChuan2011FastAnomalyDetectionForStreamingData}.
+
+The HST method is a tree-based algorithm where each tree consists of nodes that capture the mass (number of data items) within a specific region of the data stream \cite{SweeChuan2011FastAnomalyDetectionForStreamingData}. Lower mass values indicate anomalies, while higher mass values suggest normal data. The data stream is divided into two types of windows, the reference and the latest windows. The reference window is used to learn the mass value, which eventually determines whether the data in the latest window is anomalous. When the latest window is full, the mass value is updated with new data, and the reference window is updated accordingly. The content of the latest window is then erased and is ready to receive new data. This process continues until the data stream ends.
+
+\section{Related work}
+\label{RelatedWork}
+\subsubsection{Log data}
+Log data is an area in which there has been much research prior to our study and there exist many different log \revrev{data sets}{datasets} from different machines. There have been several evaluations of HDFS datasets \cite{Shilin2017experiencereport} \cite{ZEUFACK2021100030Anunsupervisedanomalydetection} \cite{zhu2023loghublargecollectionlog} \cite{Wei2010consolelogs} \cite{Pinja2017Drain} \cite{Guo2021LogBERT} \cite{Le2022LogBased} and BGL datasets \cite{Guo2021LogBERT} \cite{Le2022LogBased} \cite{Shilin2017experiencereport}\cite{zhu2023loghublargecollectionlog}\cite{Pinja2017Drain}, these two datasets are also used in our research. To utilize log data effectively, log parsing is required \cite{zhu2019toolsbenchmarksautomatedlog}. Therefore, we use Drain, which outperforms existing online log parsers in both accuracy and efficiency, as well as surpassing state-of-the-art offline parsers\cite{Pinja2017Drain}, which is also research on by Zhu et al \cite{zhu2019toolsbenchmarksautomatedlog}. To enable the use of anomaly detection techniques, feature extraction is necessary. The subject has been extensively studied in prior research \cite{Shilin2017experiencereport} \cite{Gautam2018bigdatarealtime} and highlights the two grouping techniques that we will use, sliding and session window.
+
+\subsubsection{Online data}
+There has been previous research within the area of anomaly detection on streaming data, that is, real-time data \cite{Hasani2017robustanomaly}\cite{ZEUFACK2021100030Anunsupervisedanomalydetection}. Hasani \cite{Hasani2017robustanomaly} discusses the importance of detecting anomalies in real-time, to instantly alarm on threats before they are stored. He highlights the importance of algorithms needing a low processing time, eventually at the cost of accuracy. Additionally a comparison is done of nine fast anomaly detection techniques performed on timeseries-stamped log-datasets, evaluating the number of anomalies found. However, only investigating these algorithms creates a research gap for other anomaly detection techniques such as Half-Space Trees and One-Class SVM. 
+
+Zeufack et al. \cite{ZEUFACK2021100030Anunsupervisedanomalydetection} studies unsupervised anomaly detection on streaming log files, and proposes a new real-time method that can process log messages as they are generated, without studying the log-file beforehand. However they only use one anomaly detection method and no comparison is done between others. This research highlights the need of evaluating techniques based on their ability to detect anomalies, while leaving room for more research to be done in the area and analyzing other techniques on online log data.  
+
+\subsubsection{Offline data}
+The area of anomaly detection on offline data has previously been studied. Munir et al. \cite{Munir2019Comparativeanalysis} looks into anomaly detection on data comparing deep learning-based anomaly detection methods with traditional methods. They do this by evaluating the results on precision, area under ROC curve, area under precision-recall and inference time. However, the datasets used in the study are not log-based and they base their results on different metrics than this report. 
+
+\subsubsection{Anomaly Detection}
+Anomaly detection has a wide range of usage areas, and previous research has been conducted to evaluate their results, identify use areas, and outline relevant techniques \cite{Callegari2017anoverviewofselectedmethods}\cite{Varun2009Anomaly}. Anomaly detection techniques have been widely explored in previous research, with machine learning-based approaches being the most commonly used \cite{Shilin2017experiencereport} \cite{Wei2010consolelogs} \cite{ZEUFACK2021100030Anunsupervisedanomalydetection}. Various methods have been applied to detect anomalies in datasets, including PCA \cite{Shilin2017experiencereport}\cite{Munir2019Comparativeanalysis}\cite{Mahadevan2009Fault},
+Isolation Forest \cite{Munir2019Comparativeanalysis}\cite{Awad2023anomalydetectionandsecurityenhancement}\cite{Lukito2023Comparison},
+LogClustering \cite{7883294}, Half-Space Trees \cite{SweeChuan2011FastAnomalyDetectionForStreamingData}, and One-Class SVM \cite{Lukito2023Comparison}\cite{Mahadevan2009Fault}. However, they have not been compared against each other on log-data. 
