@@ -1,0 +1,46 @@
+%%% Abstract.tex --- 
+%% 
+%% Filename: Abstract.tex
+%% Description: 
+%% Author: Ola Leifler
+%% Maintainer: 
+%% Created: Thu Oct 14 13:34:11 2010 (CEST)
+%% Version: $Id$
+%% Version: 
+%% Last-Updated: Tue Dec  1 15:19:52 2015 (+0100)
+%%           By: Ola Leifler
+%%     Update #: 4
+%% URL: 
+%% Keywords: 
+%% Compatibility: 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%% Commentary: 
+%% 
+%% 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%% Change log:
+%% 
+%% 
+%% RCS $Log$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%% Code:
+
+Generated log data contains valuable insight into potential security threats. However, these logs are of large quantities, and handling it manually is quite a challenge. The need for high-scoring automated anomaly detection is large, specifically within the context of offline and online anomaly detection. Detecting anomalies offline creates opportunity to debug, error trace and analyze root causes. An online setting, on the other hand, enables the opportunity to detect anomalous behavior and prevent threats before they escalate into actual security incidents.
+
+In this study a method consisting of four steps was applied. First already collected log datasets were downloaded, HDFS-v1 and BGL from Loghub. Followed by log parsing, the BGL dataset was already structured and there was no need for log parsing but for the HDFS dataset  drain was applied to retrieve event templates. The next step was to extract features from the data, which was done by a session window approach for the HDFS dataset and a sliding window method for the BGL dataset. Lastly, the anomaly detection techniques were executed with the processed data. Three algorithms were \revrev{applied}{implemented in offline scenarios}, Isolation Forest, PCA and LogClustering\revrev{, that represented the offline use case. and two}{. Two} algorithms, Half-Space Trees and One-Class SVM, \revrev{that demonstrated the online use case.}{were implemented in online scenarios.} \revrev{}{The algorithm SVM was also applied and used as a benchmark for the offline algorithms.} In addition, an iterative approach was used to record the best possible results.
+
+By comparing three offline and two online anomaly detection techniques, this thesis concludes the best anomaly detection technique within each use case. \revrev{}{LogClustering achieved the best performance in the offline scenario. Among the two online methods, Half-Space Trees performed better on the HDFS dataset, while One-Class SVM showed better results on the BGL dataset.} Additionally, a comparison is done between offline and online anomaly detection\revrev{}{, where the offline algorithms performed the best}. The results are then discussed and reasoned about before proposing interesting topics for future research. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Abstract.tex ends here
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "demothesis"
+%%% End: 
